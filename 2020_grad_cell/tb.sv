@@ -1,8 +1,8 @@
 `timescale 1ns/10ps
-`define CYCLE      20.0  
+`define CYCLE      20.0
 `define SDFFILE    "./SME_syn.sdf"
 `define End_CYCLE  1000000
-`define PAT        "D:/cell base ic hw/2020_IC/2020_grad_cell/Btestdata.txt"
+`define PAT        "C:/Users/HIBIKI/Desktop/String_machine_engine_IC_Contest_2020/2020_grad_cell/Btestdata.txt"
 module testfixture();
 integer linedata;
 integer char_count;
@@ -39,11 +39,11 @@ SME u_SME (.clk(clk),
 
 always begin #(`CYCLE/2) clk = ~clk; end
 
-initial begin
-    $fsdbDumpfile("SME.fsdb");
-    $fsdbDumpvars;
-    $fsdbDumpMDA;
-end
+// initial begin
+//     $fsdbDumpfile("SME.fsdb");
+//     $fsdbDumpvars;
+//     $fsdbDumpMDA;
+// end
 
 //initial begin
 //    $dumpfile("SME.vcd");
@@ -54,8 +54,8 @@ initial begin
     $display("----------------------");
     $display("-- Simulation Start --");
     $display("----------------------");
-    @(posedge clk); #1; reset = 1'b1; 
-    #(`CYCLE*2);  
+    @(posedge clk); #1; reset = 1'b1;
+    #(`CYCLE*2);
     @(posedge clk); #1;   reset = 1'b0;
 end
 
@@ -111,7 +111,7 @@ always @(negedge clk) begin
                         //colordisplay(cycle,goldmatch,goldmatch_index,getmatch,getmatch_index,3);
                         $display ("       cycle %2h, expect(%h,%h) , get(%h,%h) >> Pass",cycle,goldmatch,goldmatch_index,getmatch,getmatch_index);
                     end
-                    else begin 
+                    else begin
                         allpass=0;
                         //colordisplay(cycle,goldmatch,goldmatch_index,getmatch,getmatch_index,2);
                         $display ("       cycle %2h, expect(%h,%h) , get(%h,%h) >> Wrong index",cycle,goldmatch,goldmatch_index,getmatch,getmatch_index);
@@ -145,7 +145,7 @@ always @(negedge clk ) begin
         isstring=0;
         ispattern=0;
         valid_reg=0;
-    end 
+    end
     else begin
         if (strindex==strdata.len()-1) begin
             isstring=0;
@@ -157,13 +157,13 @@ always @(negedge clk ) begin
                 strindex=strindex+1;
                 chardata = strdata.getc(strindex);
                 //$display("%h %s,%h",cycle,chardata,chardata);
-            end 
+            end
             else begin
                 if (!$feof(linedata))begin
                     char_count = $fgets (data, linedata);
                     if (char_count !== 0) begin
                         if(data.substr(0,3) == "str:") begin
-                            isstring=1; 
+                            isstring=1;
                             strindex=0;
                             strnum = data.substr(4,4);
                             strdata = data.substr(6,data.len()-2);
@@ -171,10 +171,10 @@ always @(negedge clk ) begin
                             $display("  == String %s  \"%s\"", strnum, strdata);
                             chardata = strdata.getc(strindex);
                             //$display("%h %s,%h",cycle,chardata,chardata);
-                        end 
+                        end
                         else begin
                             if(data.substr(0,3) == "pat:") begin
-                                ispattern=1; 
+                                ispattern=1;
                                 strindex=0;
                                 patnum = data.substr(4,4);
                                 goldmatch_s = data.substr(6,6);
@@ -213,7 +213,7 @@ task colordisplay;
     input [7:0] goldmatchindex;
     input getmatch;
     input [7:0] getmatchindex;
-    input [1:0]pass; 
+    input [1:0]pass;
     begin
         $write ("       cycle %2h, expect(%h,%h) , get(",cycle,goldmatch,goldmatchindex);
         case(pass)

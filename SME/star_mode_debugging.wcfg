@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="testfixture_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="testfixture" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="36,151.666 ns"></ZoomStartTime>
+      <ZoomEndTime time="36,881.667 ns"></ZoomEndTime>
+      <Cursor1Time time="36,760.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="237"></NameColumnWidth>
+      <ValueColumnWidth column_width="110"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="10" />
+   <wave_markers>
+      <marker time="23092000" label="" />
+      <marker time="22252000" label="" />
+      <marker time="16572000" label="" />
+      <marker time="16991812" label="" />
+   </wave_markers>
+   <wvobject fp_name="group41" type="group">
+      <obj_property name="label">TestBed</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/testfixture/linedata" type="array">
+         <obj_property name="ElementShortName">linedata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">linedata[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/char_count" type="array">
+         <obj_property name="ElementShortName">char_count[31:0]</obj_property>
+         <obj_property name="ObjectShortName">char_count[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/valid" type="logic">
+         <obj_property name="ElementShortName">valid</obj_property>
+         <obj_property name="ObjectShortName">valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/chardata" type="array">
+         <obj_property name="ElementShortName">chardata[7:0]</obj_property>
+         <obj_property name="ObjectShortName">chardata[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/isstring" type="logic">
+         <obj_property name="ElementShortName">isstring</obj_property>
+         <obj_property name="ObjectShortName">isstring</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/ispattern" type="logic">
+         <obj_property name="ElementShortName">ispattern</obj_property>
+         <obj_property name="ObjectShortName">ispattern</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/match" type="logic">
+         <obj_property name="ElementShortName">match</obj_property>
+         <obj_property name="ObjectShortName">match</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/match_index" type="array">
+         <obj_property name="ElementShortName">match_index[4:0]</obj_property>
+         <obj_property name="ObjectShortName">match_index[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/cycle" type="array">
+         <obj_property name="ElementShortName">cycle[22:0]</obj_property>
+         <obj_property name="ObjectShortName">cycle[22:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/strindex" type="array">
+         <obj_property name="ElementShortName">strindex[31:0]</obj_property>
+         <obj_property name="ObjectShortName">strindex[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/goldmatch_index" type="array">
+         <obj_property name="ElementShortName">goldmatch_index[7:0]</obj_property>
+         <obj_property name="ObjectShortName">goldmatch_index[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/goldmatch" type="logic">
+         <obj_property name="ElementShortName">goldmatch</obj_property>
+         <obj_property name="ObjectShortName">goldmatch</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/valid_reg" type="logic">
+         <obj_property name="ElementShortName">valid_reg</obj_property>
+         <obj_property name="ObjectShortName">valid_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/wait_valid" type="logic">
+         <obj_property name="ElementShortName">wait_valid</obj_property>
+         <obj_property name="ObjectShortName">wait_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/getmatch" type="logic">
+         <obj_property name="ElementShortName">getmatch</obj_property>
+         <obj_property name="ObjectShortName">getmatch</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/getmatch_index" type="array">
+         <obj_property name="ElementShortName">getmatch_index[7:0]</obj_property>
+         <obj_property name="ObjectShortName">getmatch_index[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/score" type="array">
+         <obj_property name="ElementShortName">score[31:0]</obj_property>
+         <obj_property name="ObjectShortName">score[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/allpass" type="array">
+         <obj_property name="ElementShortName">allpass[31:0]</obj_property>
+         <obj_property name="ObjectShortName">allpass[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group117" type="group">
+      <obj_property name="label">I/O</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/clk" type="logic">
+         <obj_property name="ElementShortName">clk</obj_property>
+         <obj_property name="ObjectShortName">clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/reset" type="logic">
+         <obj_property name="ElementShortName">reset</obj_property>
+         <obj_property name="ObjectShortName">reset</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/isstring" type="logic">
+         <obj_property name="ElementShortName">isstring</obj_property>
+         <obj_property name="ObjectShortName">isstring</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/chardata" type="array">
+         <obj_property name="ElementShortName">chardata[7:0]</obj_property>
+         <obj_property name="ObjectShortName">chardata[7:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/ispattern" type="logic">
+         <obj_property name="ElementShortName">ispattern</obj_property>
+         <obj_property name="ObjectShortName">ispattern</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/match" type="logic">
+         <obj_property name="ElementShortName">match</obj_property>
+         <obj_property name="ObjectShortName">match</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/valid" type="logic">
+         <obj_property name="ElementShortName">valid</obj_property>
+         <obj_property name="ObjectShortName">valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/match_index" type="array">
+         <obj_property name="ElementShortName">match_index[4:0]</obj_property>
+         <obj_property name="ObjectShortName">match_index[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/testfixture/u_SME/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="group126" type="group">
+      <obj_property name="label">Str_pattern_Length</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/str_length_cnt" type="array">
+         <obj_property name="ElementShortName">str_length_cnt[7:0]</obj_property>
+         <obj_property name="ObjectShortName">str_length_cnt[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/pattern_length_cnt" type="array">
+         <obj_property name="ElementShortName">pattern_length_cnt[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pattern_length_cnt[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group234" type="group">
+      <obj_property name="label">CurrentChars</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/current_str_char" type="array">
+         <obj_property name="ElementShortName">current_str_char[7:0]</obj_property>
+         <obj_property name="ObjectShortName">current_str_char[7:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/current_pattern_char" type="array">
+         <obj_property name="ElementShortName">current_pattern_char[7:0]</obj_property>
+         <obj_property name="ObjectShortName">current_pattern_char[7:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group123" type="group">
+      <obj_property name="label">PTRs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/pattern_char_ptr" type="array">
+         <obj_property name="ElementShortName">pattern_char_ptr[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pattern_char_ptr[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/str_char_ptr" type="array">
+         <obj_property name="ElementShortName">str_char_ptr[7:0]</obj_property>
+         <obj_property name="ObjectShortName">str_char_ptr[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/str_frame_ptr" type="array">
+         <obj_property name="ElementShortName">str_frame_ptr[7:0]</obj_property>
+         <obj_property name="ObjectShortName">str_frame_ptr[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/pattern_star_temp_ptr" type="array">
+         <obj_property name="ElementShortName">pattern_star_temp_ptr[7:0]</obj_property>
+         <obj_property name="ObjectShortName">pattern_star_temp_ptr[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group125" type="group">
+      <obj_property name="label">Storages</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/str_B_rf" type="array">
+         <obj_property name="ElementShortName">str_B_rf[0:31][7:0]</obj_property>
+         <obj_property name="ObjectShortName">str_B_rf[0:31][7:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/pattern_B_rf" type="array">
+         <obj_property name="ElementShortName">pattern_B_rf[0:7][7:0]</obj_property>
+         <obj_property name="ObjectShortName">pattern_B_rf[0:7][7:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group121" type="group">
+      <obj_property name="label">L1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/state_RD_DATA" type="logic">
+         <obj_property name="ElementShortName">state_RD_DATA</obj_property>
+         <obj_property name="ObjectShortName">state_RD_DATA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/state_STR_MATCHING" type="logic">
+         <obj_property name="ElementShortName">state_STR_MATCHING</obj_property>
+         <obj_property name="ObjectShortName">state_STR_MATCHING</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/state_DONE" type="logic">
+         <obj_property name="ElementShortName">state_DONE</obj_property>
+         <obj_property name="ObjectShortName">state_DONE</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group122" type="group">
+      <obj_property name="label">L2</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/state_NORMAL_MODE" type="logic">
+         <obj_property name="ElementShortName">state_NORMAL_MODE</obj_property>
+         <obj_property name="ObjectShortName">state_NORMAL_MODE</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/state_CAP_OR_SPACE" type="logic">
+         <obj_property name="ElementShortName">state_CAP_OR_SPACE</obj_property>
+         <obj_property name="ObjectShortName">state_CAP_OR_SPACE</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/state_LAST_OR_SPACE" type="logic">
+         <obj_property name="ElementShortName">state_LAST_OR_SPACE</obj_property>
+         <obj_property name="ObjectShortName">state_LAST_OR_SPACE</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/state_WAIT_FOR_CHAR" type="logic">
+         <obj_property name="ElementShortName">state_WAIT_FOR_CHAR</obj_property>
+         <obj_property name="ObjectShortName">state_WAIT_FOR_CHAR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/star_mode_state" type="logic">
+         <obj_property name="ElementShortName">star_mode_state</obj_property>
+         <obj_property name="ObjectShortName">star_mode_state</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group124" type="group">
+      <obj_property name="label">Flags</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/testfixture/u_SME/charMatches_f" type="logic">
+         <obj_property name="ElementShortName">charMatches_f</obj_property>
+         <obj_property name="ObjectShortName">charMatches_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/patternMatched_f" type="logic">
+         <obj_property name="ElementShortName">patternMatched_f</obj_property>
+         <obj_property name="ObjectShortName">patternMatched_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/strMatchingDone_f" type="logic">
+         <obj_property name="ElementShortName">strMatchingDone_f</obj_property>
+         <obj_property name="ObjectShortName">strMatchingDone_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/matches_cur_state" type="logic">
+         <obj_property name="ElementShortName">matches_cur_state</obj_property>
+         <obj_property name="ObjectShortName">matches_cur_state</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/isHat_f" type="logic">
+         <obj_property name="ElementShortName">isHat_f</obj_property>
+         <obj_property name="ObjectShortName">isHat_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/isStar_f" type="logic">
+         <obj_property name="ElementShortName">isStar_f</obj_property>
+         <obj_property name="ObjectShortName">isStar_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/isDollar_f" type="logic">
+         <obj_property name="ElementShortName">isDollar_f</obj_property>
+         <obj_property name="ObjectShortName">isDollar_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/str_is_space_f" type="logic">
+         <obj_property name="ElementShortName">str_is_space_f</obj_property>
+         <obj_property name="ObjectShortName">str_is_space_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/isPoint_f" type="logic">
+         <obj_property name="ElementShortName">isPoint_f</obj_property>
+         <obj_property name="ObjectShortName">isPoint_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/charFound_f" type="logic">
+         <obj_property name="ElementShortName">charFound_f</obj_property>
+         <obj_property name="ObjectShortName">charFound_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/localpatternSearched_f" type="logic">
+         <obj_property name="ElementShortName">localpatternSearched_f</obj_property>
+         <obj_property name="ObjectShortName">localpatternSearched_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/firstStrChar_f" type="logic">
+         <obj_property name="ElementShortName">firstStrChar_f</obj_property>
+         <obj_property name="ObjectShortName">firstStrChar_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/lastStrChar_f" type="logic">
+         <obj_property name="ElementShortName">lastStrChar_f</obj_property>
+         <obj_property name="ObjectShortName">lastStrChar_f</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/star_locally_permuted" type="logic">
+         <obj_property name="ElementShortName">star_locally_permuted</obj_property>
+         <obj_property name="ObjectShortName">star_locally_permuted</obj_property>
+      </wvobject>
+      <wvobject fp_name="/testfixture/u_SME/star_all_permuted" type="logic">
+         <obj_property name="ElementShortName">star_all_permuted</obj_property>
+         <obj_property name="ObjectShortName">star_all_permuted</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

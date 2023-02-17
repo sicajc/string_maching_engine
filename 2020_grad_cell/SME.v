@@ -5,8 +5,12 @@ input [7:0] chardata;
 input isstring;
 input ispattern;
 output match;
-output [4:0] match_index;
+output reg[4:0] match_index;
 output valid;
+//==================
+//  Integers
+//==================
+integer i;
 
 //==================
 //  PARAMETERS
@@ -38,7 +42,7 @@ localparam DONE         = 3'b100 ;
 
 //L2 FSM
 localparam NORMAL_MODE   = 4'b0001 ;
-localparam CAP_OR_SPACE  = 4'b0010 ;
+localparam FIRST_OR_SPACE  = 4'b0010 ;
 localparam LAST_OR_SPACE = 4'b0100 ;
 localparam WAIT_FOR_CHAR = 4'b1000 ;
 
@@ -62,14 +66,14 @@ wire state_WAIT_FOR_CHAR = l2_curState[3];
 reg[PTR_WIDTH-1:0] pattern_char_ptr;
 reg[PTR_WIDTH-1:0] str_char_ptr;
 reg[PTR_WIDTH-1:0] str_frame_ptr;
+reg [PTR_WIDTH-1:0] pattern_star_temp_ptr;
 
 
 //================================
 //  STR,PATTERN STORAGE
 //================================
-reg [BYTE-1:0] str_B_rf[0:STR_LENGTH-1:0];
-reg [BYTE-1:0] pattern_B_rf[0:PATTERN_LENGTH-1:0];
-reg [BYTE-1:0] char_to_search_B_ff;
+reg [BYTE-1:0] str_B_rf[0:STR_LENGTH-1];
+reg [BYTE-1:0] pattern_B_rf[0:PATTERN_LENGTH-1];
 
 //================================
 //  COUNTERS
@@ -77,28 +81,44 @@ reg [BYTE-1:0] char_to_search_B_ff;
 reg [CNT_WIDTH-1:0] str_length_cnt;
 reg [CNT_WIDTH-1:0] pattern_length_cnt;
 
+//=======================================
+//  String and Pattern current Character
+//=======================================
+wire[BYTE-1:0] current_str_char = str_B_rf[str_char_ptr];
+wire[BYTE-1:0] current_pattern_char = pattern_B_rf[pattern_char_ptr];
+
 //================================
 //  CONTROL FLAGS
 //================================
-wire isHat_f           = pattern_char_ptr == HAT;
-wire isStar_f          = pattern_char_ptr == STAR;
-wire isDollar_f        = pattern_char_ptr == DOLLAR;
+reg charMatches_f;
+reg strMatchingDone_f;
+reg matches_cur_state;
+reg star_mode_state;
 
-wire str_is_space_f    =  str_B_rf[str_char_p] == SPACE;
+wire isHat_f           = pattern_B_rf[pattern_char_ptr] == HAT;
+wire isStar_f          = pattern_B_rf[pattern_char_ptr] == STAR;
+wire isDollar_f        = pattern_B_rf[pattern_char_ptr] == DOLLAR;
 
-wire isPoint_f         = pattern_char_ptr == POINT;
+wire str_is_space_f    =  str_B_rf[str_char_ptr] == SPACE;
+
+wire isPoint_f         = pattern_B_rf[pattern_char_ptr] == POINT;
 wire charFound_f       = charMatches_f && state_WAIT_FOR_CHAR;
 
-wire localpatternSearched_f = pattern_char_ptr == PATTERN_LENGTH-1;
+wire localpatternSearched_f = (pattern_char_ptr == (pattern_length_cnt-1));
 
 wire firstStrChar_f              = str_char_ptr == 0;
-wire lastStrChar_f               = str_char_ptr == str_length_cnt;
+wire lastStrChar_f               = str_char_ptr >= str_length_cnt-1;
+
+wire str_current_is_empty        = current_str_char == 0;
+
+wire patternMatched_f = (localpatternSearched_f && charMatches_f) || (state_LAST_OR_SPACE && str_current_is_empty);
+
+wire star_locally_permuted = !charMatches_f && star_mode_state ;
+wire star_all_permuted;
 
 //================================
 //  Det Match flag
 //================================
-reg charMatches_f;
-
 always @(*)
 begin
     if(state_STR_MATCHING)
@@ -106,9 +126,9 @@ begin
         case(l2_curState)
             NORMAL_MODE:
             begin
-                charMatches_f = isPoint_f || str_B_rf[str_char_ptr] == pattern_B_rf[pattern_char_ptr];
+                charMatches_f =  isPoint_f || str_B_rf[str_char_ptr] == pattern_B_rf[pattern_char_ptr];
             end
-            CAP_OR_SPACE:
+            FIRST_OR_SPACE:
             begin
                 if(firstStrChar_f)
                 begin
@@ -127,7 +147,7 @@ begin
             begin
                 if(lastStrChar_f)
                 begin
-                    charMatches_f = isPoint_f || str_B_rf[str_char_ptr] == pattern_B_rf[pattern_char_ptr];
+                    charMatches_f = str_current_is_empty;
                 end
                 else if(str_is_space_f)
                 begin
@@ -140,7 +160,7 @@ begin
             end
             WAIT_FOR_CHAR:
             begin
-                charMatches_f = 1'b1;
+                charMatches_f = str_B_rf[str_char_ptr] == pattern_B_rf[pattern_char_ptr];
             end
             default:
             begin
@@ -156,30 +176,32 @@ end
 //================================
 //  matches cur state
 //================================
-reg matches_cur_state;
 always @(posedge clk)
 begin
     if(reset)
     begin
-        matches_cur_state <= 1'b0;
+        matches_cur_state <= #2 1'b0;
     end
     else if(state_DONE)
     begin
-        matches_cur_state <= 1'b0;
+        matches_cur_state <= #2 1'b0;
     end
     else
     begin
-        matches_cur_state <= charMatches_f;
+        matches_cur_state <= #2 charMatches_f;
     end
 end
 
 //================================
 //  str Matching done flag
 //================================
-reg strMatchingDone_f;
 always @(*)
 begin
-    if(matches_cur_state && pattern_length_cnt == (PATTERN_LENGTH-1))
+    if(matches_cur_state && pattern_char_ptr == (PATTERN_LENGTH-1))
+    begin
+        strMatchingDone_f = 1'b1;
+    end
+    else if(str_char_ptr == ((STR_LENGTH-1)-pattern_length_cnt))
     begin
         strMatchingDone_f = 1'b1;
     end
@@ -198,11 +220,11 @@ always @(posedge clk or posedge reset)
 begin:L1_FSM
     if(reset)
     begin
-        l1_curState <= RD_DATA;
+        l1_curState <= #2 RD_DATA;
     end
     else
     begin
-        l1_curState <= l1_nxtState;
+        l1_curState <= #2 l1_nxtState;
     end
 end
 
@@ -215,7 +237,7 @@ begin:L1_FSM_NXT
         end
         STR_MATCHING:
         begin
-            l1_nxtState = strMatchingDone_f ? DONE : STR_MATCHING;
+            l1_nxtState = patternMatched_f || strMatchingDone_f ? DONE : STR_MATCHING;
         end
         DONE:
         begin
@@ -235,11 +257,11 @@ always @(posedge clk or posedge reset)
 begin:L2_FSM
     if(reset)
     begin
-        l2_curState <= NORMAL_MODE;
+        l2_curState <= #2 NORMAL_MODE;
     end
     else
     begin
-        l2_curState <= l2_nxtState;
+        l2_curState <= #2 l2_nxtState;
     end
 end
 
@@ -248,26 +270,33 @@ begin:L2_FSM_NXT
     case(l2_curState)
         NORMAL_MODE:
         begin
-            case({isHat_f,isDollar_f,isStar_f})
-                3'b100:
-                begin
-                    l2_nxtState = CAP_OR_SPACE;
-                end
-                3'b010:
-                begin
-                    l2_nxtState = LAST_OR_SPACE;
-                end
-                3'b001:
-                begin
-                    l2_nxtState = WAIT_FOR_CHAR;
-                end
-                default:
-                begin
-                    l2_nxtState = NORMAL_MODE;
-                end
-            endcase
+            if(star_locally_permuted)
+            begin
+                l2_nxtState = WAIT_FOR_CHAR;
+            end
+            else
+            begin
+                case({isHat_f,isDollar_f,isStar_f})
+                    3'b100:
+                    begin
+                        l2_nxtState = FIRST_OR_SPACE;
+                    end
+                    3'b010:
+                    begin
+                        l2_nxtState = LAST_OR_SPACE;
+                    end
+                    3'b001:
+                    begin
+                        l2_nxtState = WAIT_FOR_CHAR;
+                    end
+                    default:
+                    begin
+                        l2_nxtState = NORMAL_MODE;
+                    end
+                endcase
+            end
         end
-        CAP_OR_SPACE:
+        FIRST_OR_SPACE:
         begin
             l2_nxtState = NORMAL_MODE;
         end
@@ -288,124 +317,235 @@ end
 //================================
 //  POINTERS
 //================================
-always @(posedge clk or posedge )
+always @(posedge clk or posedge reset)
 begin: PTRS
     if(reset)
     begin
-        pattern_char_ptr<= 0;
-        str_char_ptr    <= 0;
-        str_frame_ptr   <= 0;
+        pattern_char_ptr<= #2 0;
+        str_char_ptr    <= #2 0;
+        str_frame_ptr   <= #2 0;
     end
     else if(state_DONE)
     begin
-        pattern_char_ptr<= 0;
-        str_char_ptr    <= 0;
-        str_frame_ptr   <= 0;
+        pattern_char_ptr<= #2 0;
+        str_char_ptr    <= #2 0;
+        str_frame_ptr   <= #2 0;
     end
     else if(state_STR_MATCHING)
     begin
         case(l2_curState)
             NORMAL_MODE:
             begin
-                pattern_char_ptr<= charMatches_f ? pattern_char_ptr + 1 : 0;
-                str_char_ptr    <= charMatches_f ? str_char_ptr + 1 : str_frame_ptr;
-                str_frame_ptr   <= localpatternSearched_f ? str_frame_ptr + 1 :str_frame_ptr;
+                if(star_locally_permuted)
+                begin
+                    pattern_char_ptr <= #2 pattern_star_temp_ptr;
+                    str_char_ptr     <= #2 str_char_ptr;
+                    str_frame_ptr    <= #2 str_frame_ptr;
+                end
+                else if(isHat_f)
+                begin
+                    pattern_char_ptr <= #2 pattern_char_ptr;
+                    str_char_ptr     <= #2 str_char_ptr;
+                    str_frame_ptr    <= #2 str_frame_ptr;
+                end
+                else if(isDollar_f)
+                begin
+                    pattern_char_ptr <= #2 pattern_char_ptr ;
+                    str_char_ptr     <= #2 str_char_ptr ;
+                    str_frame_ptr    <= #2 str_frame_ptr;
+                end
+                else if(isStar_f)
+                begin
+                    pattern_char_ptr <= #2 pattern_char_ptr+1;
+                    str_char_ptr     <= #2 str_char_ptr ;
+                    str_frame_ptr    <= #2 str_frame_ptr;
+                end
+                else if(localpatternSearched_f)
+                begin
+                    pattern_char_ptr <= #2 0;
+                    str_char_ptr     <= #2 str_frame_ptr + 1;
+                    str_frame_ptr    <= #2 star_mode_state ? str_frame_ptr : str_frame_ptr + 1;
+                end
+                else if(!charMatches_f)
+                begin
+                    pattern_char_ptr <= #2 0;
+                    str_char_ptr     <= #2 str_frame_ptr + 1;
+                    str_frame_ptr    <= #2 star_mode_state ? str_frame_ptr : str_frame_ptr + 1;
+                end
+                else
+                begin
+                    pattern_char_ptr<= #2 charMatches_f ? pattern_char_ptr + 1 : 0;
+                    str_char_ptr    <= #2 charMatches_f ? str_char_ptr + 1 : str_frame_ptr;
+                    str_frame_ptr   <= #2 str_frame_ptr;
+                end
             end
-            CAP_OR_SPACE:
+            FIRST_OR_SPACE:
             begin
-                pattern_char_ptr<= pattern_char_ptr + 1;
-                str_char_ptr    <= str_char_ptr;
-                str_frame_ptr   <= str_frame_ptr;
+                if(firstStrChar_f)
+                begin
+                    pattern_char_ptr<= #2 pattern_char_ptr + 1;
+                    str_char_ptr    <= #2 str_char_ptr;
+                    str_frame_ptr   <= #2 str_frame_ptr;
+                end
+                else if(str_is_space_f)
+                begin
+                    pattern_char_ptr<= #2 pattern_char_ptr + 1;
+                    str_char_ptr    <= #2 str_char_ptr + 1;
+                    str_frame_ptr   <= #2 str_frame_ptr + 1;
+                end
+                else
+                begin
+                    pattern_char_ptr<= #2 0;
+                    str_char_ptr    <= #2 str_frame_ptr + 1;
+                    str_frame_ptr   <= #2 str_frame_ptr + 1;
+                end
             end
             LAST_OR_SPACE:
             begin
-                pattern_char_ptr<= pattern_char_ptr;
-                str_char_ptr    <= str_char_ptr;
-                str_frame_ptr   <= str_frame_ptr;
+                if(lastStrChar_f)
+                begin
+                    pattern_char_ptr <= #2 pattern_char_ptr;
+                    str_char_ptr     <= #2 str_char_ptr;
+                    str_frame_ptr    <= #2 str_frame_ptr;
+                end
+                else
+                begin
+                    pattern_char_ptr <= #2 0;
+                    str_char_ptr     <= #2 str_frame_ptr+1;
+                    str_frame_ptr    <= #2 str_frame_ptr+1;
+                end
             end
             WAIT_FOR_CHAR:
             begin
-                pattern_char_ptr<= charFound_f ? pattern_char_ptr + 1 : pattern_char_ptr;
-                str_char_ptr    <= !charFound_f ? str_char_ptr + 1 : str_char_ptr;
-                str_frame_ptr   <= str_frame_ptr;
+                if(charFound_f)
+                begin
+                    pattern_char_ptr <= #2 pattern_char_ptr+1;
+                    str_char_ptr     <= #2 str_char_ptr  +1;
+                    str_frame_ptr    <= #2 str_frame_ptr ;
+                end
+                else
+                begin
+                    pattern_char_ptr<= #2 pattern_char_ptr;
+                    str_char_ptr    <= #2 charFound_f ? str_char_ptr : str_char_ptr + 1;
+                    str_frame_ptr   <= #2 str_frame_ptr;
+                end
             end
             default:
             begin
-                pattern_char_ptr<= 0;
-                str_char_ptr    <= 0;
-                str_frame_ptr   <= 0;
+                pattern_char_ptr<= #2 0;
+                str_char_ptr    <= #2 0;
+                str_frame_ptr   <= #2 0;
             end
         endcase
     end
     else
     begin
-        pattern_char_ptr     <=pattern_char_ptr ;
-        str_char_ptr        <=str_char_ptr ;
-        str_frame_ptr       <=str_frame_ptr ;
+        pattern_char_ptr     <= #2 pattern_char_ptr ;
+        str_char_ptr        <= #2 str_char_ptr ;
+        str_frame_ptr       <= #2 str_frame_ptr ;
     end
 end
+
+always @(posedge clk or posedge reset)
+begin
+    if(reset)
+    begin
+        pattern_star_temp_ptr <= 0;
+    end
+    else if(charFound_f)
+    begin
+        pattern_star_temp_ptr <= pattern_char_ptr;
+    end
+    else
+    begin
+        pattern_star_temp_ptr <= pattern_star_temp_ptr;
+    end
+end
+
+always @(posedge clk or posedge reset)
+begin
+    if(reset)
+    begin
+        star_mode_state <= 0;
+    end
+    else if(patternMatched_f)
+    begin
+        star_mode_state <= 0;
+    end
+    else if(isStar_f)
+    begin
+        star_mode_state <= 1;
+    end
+    else
+    begin
+        star_mode_state <= star_mode_state;
+    end
+end
+
+
 
 //================================
 //  COUNTERS
 //================================
-always @(posedge clk or posedge )
+always @(posedge clk or posedge reset)
 begin: LEN_CNT
     if(reset)
     begin
-        pattern_length_cnt <= 1;
-        str_length_cnt     <= 1;
+        pattern_length_cnt <= #2 0;
+        str_length_cnt     <= #2 0;
     end
     else if(state_DONE)
     begin
-        pattern_length_cnt <= 1;
-        str_length_cnt     <= 1;
+        pattern_length_cnt <= #2 ispattern ? 1 : pattern_length_cnt;
+        str_length_cnt     <= #2 isstring  ? 1 : str_length_cnt;
     end
-    else if(is_string)
+    else if(isstring)
     begin
-        pattern_length_cnt <= pattern_length_cnt;
-        str_length_cnt     <= str_length_cnt + 1;
+        pattern_length_cnt <= #2 0;
+        str_length_cnt     <= #2 str_length_cnt + 1;
     end
-    else if(is_pattern)
+    else if(ispattern)
     begin
-        str_length_cnt     <= str_length_cnt;
-        pattern_length_cnt <= pattern_length_cnt+1;
+        str_length_cnt     <= #2 str_length_cnt;
+        pattern_length_cnt <= #2 pattern_length_cnt+1;
     end
     else
     begin
-        pattern_length_cnt <= pattern_length_cnt;
-        str_length_cnt     <= str_length_cnt;
+        pattern_length_cnt <= #2 pattern_length_cnt;
+        str_length_cnt     <= #2 str_length_cnt;
     end
 end
 
 //================================
 //  string,pattern data storage
 //================================
-integer i;
 always @(posedge clk or posedge reset)
 begin: STR_RF
     if(reset)
     begin
         for(i=0;i<STR_LENGTH;i=i+1)
         begin
-            str_B_rf[i] <= {B{1'b0}};
+            str_B_rf[i] <= #2 {BYTE{1'b0}};
         end
     end
     else if(state_DONE)
     begin
-        for(i=0;i<STR_LENGTH;i=i+1)
+        for(i=1;i<STR_LENGTH;i=i+1)
         begin
-            str_B_rf[i] <= {B{1'b0}};
+            str_B_rf[i] <= #2 isstring ? {BYTE{1'b0}} : str_B_rf[i];
         end
+
+        str_B_rf[0] <= #2 isstring ? chardata : str_B_rf[0];
     end
     else if(state_RD_DATA && isstring)
     begin
-        str_B_rf[(str_length_cnt-1)] <= chardata;
+        str_B_rf[(str_length_cnt)] <= #2 chardata;
     end
     else
     begin
         for(i=0;i<STR_LENGTH;i=i+1)
         begin
-            str_B_rf[i] <= str_B_rf[i];
+            str_B_rf[i] <= #2 str_B_rf[i];
         end
     end
 end
@@ -416,28 +556,50 @@ begin: PATTERN_RF
     begin
         for(i=0;i<PATTERN_LENGTH;i=i+1)
         begin
-            pattern_B_rf[i] <= {B{1'b0}};
+            pattern_B_rf[i] <= #2 {BYTE{1'b0}};
         end
     end
     else if(state_DONE)
     begin
-        for(i=0;i<PATTERN_LENGTH;i=i+1)
+        for(i=1;i<PATTERN_LENGTH;i=i+1)
         begin
-            pattern_B_rf[i] <= {B{1'b0}};
+            pattern_B_rf[i] <= #2 {BYTE{1'b0}};
         end
+
+        pattern_B_rf[0] <= ispattern ? chardata : 0;
     end
     else if(state_RD_DATA && ispattern)
     begin
-        pattern_B_rf[(pattern_length_cnt-1)] <= chardata;
+        pattern_B_rf[(pattern_length_cnt)] <= #2 chardata;
     end
     else
     begin
         for(i=0;i<PATTERN_LENGTH;i=i+1)
         begin
-            pattern_B_rf[i] <= pattern_B_rf[i];
+            pattern_B_rf[i] <= #2 pattern_B_rf[i];
         end
     end
 end
+
+//================================
+//  I/O
+//================================
+assign match = state_DONE && matches_cur_state;
+
+always @(posedge clk or posedge reset)
+begin
+    if(reset)
+    begin
+        match_index <= 0;
+    end
+    else
+    begin
+        match_index <= patternMatched_f ? str_frame_ptr : match_index;
+    end
+end
+
+assign valid = state_DONE;
+
 
 
 endmodule
