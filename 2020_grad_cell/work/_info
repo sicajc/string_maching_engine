@@ -1,0 +1,85 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/user/Desktop/2020_IC/2020_grad_cell
+T_opt
+!s110 1602767657
+Ve<YJI8GKMBegbT8^:>ha50
+04 11 4 work testfixture fast 0
+=1-902b343d0761-5f884b29-27a-a74
+o-quiet -auto_acc_if_foreign -work work +acc
+n@_opt
+OL;O;10.4;61
+R0
+vSME
+!s110 1603261257
+!i10b 1
+!s100 f@`K8@WS=C6I@UV@<_fg13
+IEhn<bj9@UomGO[6m=b;e12
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1603190456
+8SME.v
+FSME.v
+L0 1
+Z2 OL;L;10.4;61
+r1
+!s85 0
+31
+!s108 1603261257.393000
+!s107 SME.v|
+!s90 -reportprogress|300|SME.v|
+!i113 0
+Z3 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+n@s@m@e
+Xtb_sv_unit
+Z4 DXx6 sv_std 3 std 0 22 WmjPaeP=7F5?QFXzJ>D[Q2
+!s110 1603189256
+!i10b 1
+!s100 m0R64SQI;iFXR<J@PN_ZY1
+I[K<9mOfc;cOnAUAVjN^E]3
+V[K<9mOfc;cOnAUAVjN^E]3
+!i103 1
+S1
+R0
+Z5 w1602847381
+Z6 8tb.sv
+Z7 Ftb.sv
+L0 210
+R2
+r1
+!s85 0
+31
+Z8 !s108 1603189256.689000
+Z9 !s107 tb.sv|
+Z10 !s90 -reportprogress|300|tb.sv|
+!i113 0
+R3
+vtestfixture
+R4
+R1
+r1
+!s85 0
+31
+!i10b 1
+!s100 NRUKfC`XNO=e5UTWU=3G03
+IXdaQPfbUPT0lWdOVi2Y3m2
+!s105 tb_sv_unit
+S1
+R0
+R5
+R6
+R7
+L0 6
+R2
+R8
+R9
+R10
+!i113 0
+R3

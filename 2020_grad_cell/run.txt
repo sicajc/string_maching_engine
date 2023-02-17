@@ -1,0 +1,9 @@
+quit -sim
+cd C:/Users/user/Desktop/2020_IC/2020_grad_cell
+vlog SME.v
+vlog tb.sv
+vlib work
+vmap work work
+vsim -novopt testfixture
+add wave -position insertpoint sim:/testfixture/*
+run -all
