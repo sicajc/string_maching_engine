@@ -105,4 +105,19 @@ Time resolution is 1 ps
   -- Pattern 5  ".ree *re"
        cycle 668, expect(1,0a) , get(0,01) >> Fail
   -- Pattern 6  "re. thr"
-       cycle 67c,
+       cycle 67c, expect(1,05) , get(1,00) >> Wrong index
+  -- Pattern 7  "ee*ee fr"
+       cycle 6a1, expect(0,--) , get(0,--) >> Pass
+  -- Pattern 8  "ee*ee th"
+       cycle 6c6, expect(1,0c) , get(0,00) >> Fail
+  -- Pattern 9  "re*ee.$"
+       cycle 6eb, expect(0,--) , get(0,--) >> Pass
+  -- Pattern a  "^...$"
+       cycle 70c, expect(0,--) , get(0,--) >> Pass
+  -- Pattern b  "^....$"
+       cycle 72d, expect(1,0f) , get(0,00) >> Fail
+----------------------------------
+-- Simulation finish            --
+-- cycle =1838 , Score =76       --
+----------------------------------
+$finish called at time : 36760 ns : File "C:/Users/HIBIKI/Desktop/String_machine_engine_IC_Contest_2020/2020_grad_cell/tb.sv" Line 202

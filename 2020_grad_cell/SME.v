@@ -336,13 +336,7 @@ begin: PTRS
         case(l2_curState)
             NORMAL_MODE:
             begin
-                if(star_locally_permuted)
-                begin
-                    pattern_char_ptr <= #2 pattern_star_temp_ptr;
-                    str_char_ptr     <= #2 str_char_ptr;
-                    str_frame_ptr    <= #2 str_frame_ptr;
-                end
-                else if(isHat_f)
+                if(isHat_f)
                 begin
                     pattern_char_ptr <= #2 pattern_char_ptr;
                     str_char_ptr     <= #2 str_char_ptr;
