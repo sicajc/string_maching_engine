@@ -355,6 +355,13 @@ begin: PTRS
                     str_char_ptr     <= #2 str_char_ptr ;
                     str_frame_ptr    <= #2 str_frame_ptr;
                 end
+                else if (lastStrChar_f && star_mode_state)
+                begin
+                    pattern_char_ptr <= #2 0;
+                    str_char_ptr     <= #2 str_frame_ptr + 1;
+                    str_frame_ptr    <= #2 str_frame_ptr + 1;
+
+                end
                 else if(localpatternSearched_f)
                 begin
                     if(star_mode_state)
@@ -380,18 +387,18 @@ begin: PTRS
                 begin
                     if(star_mode_state)
                     begin
-                        if(lastStrChar_f)
-                        begin
+                        // if(lastStrChar_f)
+                        // begin
                             pattern_char_ptr <= #2 pattern_star_temp_ptr;
                             str_char_ptr     <= #2 str_frame_ptr + 1;
                             str_frame_ptr    <= #2 str_frame_ptr + 1;
-                        end
-                        else
-                        begin
-                            pattern_char_ptr <= #2 pattern_char_ptr;
-                            str_char_ptr     <= #2 str_char_ptr + 1;
-                            str_frame_ptr    <= #2 str_frame_ptr;
-                        end
+                        // end
+                        // else
+                        // begin
+                        //     pattern_char_ptr <= #2 pattern_char_ptr;
+                        //     str_char_ptr     <= #2 str_char_ptr + 1;
+                        //     str_frame_ptr    <= #2 str_frame_ptr;
+                        // end
                     end
                     else
                     begin
@@ -444,6 +451,21 @@ begin: PTRS
                     pattern_char_ptr <= #2 pattern_char_ptr;
                     str_char_ptr     <= #2 str_char_ptr;
                     str_frame_ptr    <= #2 str_frame_ptr;
+                end
+                else if(star_mode_state)
+                begin
+                    if(str_is_space_f || str_current_is_empty)
+                    begin
+                        pattern_char_ptr <= #2 0;
+                        str_char_ptr     <= #2 str_frame_ptr;
+                        str_frame_ptr    <= #2 str_frame_ptr;
+                    end
+                    else
+                    begin
+                        pattern_char_ptr <= #2 pattern_star_temp_ptr;
+                        str_char_ptr     <= #2 str_char_ptr+ 1;
+                        str_frame_ptr    <= #2 str_frame_ptr ;
+                    end
                 end
                 else
                 begin
