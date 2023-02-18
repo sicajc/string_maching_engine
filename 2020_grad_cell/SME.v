@@ -94,6 +94,7 @@ reg charMatches_f;
 reg strMatchingDone_f;
 reg matches_cur_state;
 reg star_mode_state;
+reg star_searched_state;
 
 wire isHat_f           = pattern_B_rf[pattern_char_ptr] == HAT;
 wire isStar_f          = pattern_B_rf[pattern_char_ptr] == STAR;
@@ -190,6 +191,30 @@ begin
         matches_cur_state <= #2 charMatches_f;
     end
 end
+//================================
+//  searched state *
+//================================
+always @(posedge clk or posedge reset)
+begin
+    if(reset)
+    begin
+        star_searched_state <= 0;
+    end
+    else if(charFound_f)
+    begin
+        star_searched_state <= 1;
+    end
+    else if(state_WAIT_FOR_CHAR || state_DONE || !charMatches_f)
+    begin
+        star_searched_state <= 0;
+    end
+    else
+    begin
+        star_searched_state <= star_searched_state;
+    end
+end
+
+
 
 //================================
 //  str Matching done flag
@@ -387,18 +412,24 @@ begin: PTRS
                 begin
                     if(star_mode_state)
                     begin
-                        // if(lastStrChar_f)
-                        // begin
+                        if(lastStrChar_f)
+                        begin
                             pattern_char_ptr <= #2 pattern_star_temp_ptr;
                             str_char_ptr     <= #2 str_frame_ptr + 1;
                             str_frame_ptr    <= #2 str_frame_ptr + 1;
-                        // end
-                        // else
-                        // begin
-                        //     pattern_char_ptr <= #2 pattern_char_ptr;
-                        //     str_char_ptr     <= #2 str_char_ptr + 1;
-                        //     str_frame_ptr    <= #2 str_frame_ptr;
-                        // end
+                        end
+                        else if(star_searched_state)
+                        begin
+                            pattern_char_ptr <= #2 pattern_star_temp_ptr;
+                            str_char_ptr     <= #2 str_frame_ptr + 1;
+                            str_frame_ptr    <= #2 str_frame_ptr + 1;
+                        end
+                        else
+                        begin
+                            pattern_char_ptr <= #2 pattern_char_ptr    ;
+                            str_char_ptr     <= #2 str_char_ptr     + 1;
+                            str_frame_ptr    <= #2 str_frame_ptr;
+                        end
                     end
                     else
                     begin
@@ -523,7 +554,7 @@ begin
     end
     else if(charFound_f)
     begin
-        pattern_star_temp_ptr <= pattern_char_ptr;
+        pattern_star_temp_ptr <= pattern_char_ptr-1;
     end
     else
     begin
