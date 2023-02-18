@@ -108,7 +108,7 @@ wire charFound_f       = charMatches_f && state_WAIT_FOR_CHAR;
 wire localpatternSearched_f = (pattern_char_ptr == (pattern_length_cnt-1));
 
 wire firstStrChar_f              = str_char_ptr == 0;
-wire lastStrChar_f               = str_char_ptr >= str_length_cnt-1;
+wire lastStrChar_f               = str_char_ptr >= str_length_cnt;
 
 wire str_current_is_empty        = current_str_char == 0;
 
@@ -204,7 +204,7 @@ begin
     begin
         star_searched_state <= 1;
     end
-    else if(state_WAIT_FOR_CHAR || state_DONE || !charMatches_f)
+    else if(!charMatches_f)
     begin
         star_searched_state <= 0;
     end
@@ -229,7 +229,7 @@ begin
     begin
         strMatchingDone_f = 1'b1;
     end
-    else if(str_char_ptr == ((STR_LENGTH-1)-pattern_length_cnt))
+    else if(str_char_ptr == ((STR_LENGTH)-pattern_length_cnt))
     begin
         strMatchingDone_f = 1'b1;
     end
@@ -331,7 +331,7 @@ begin:L2_FSM_NXT
             begin
                 l2_nxtState = NORMAL_MODE;
             end
-            else if(str_char_ptr == str_length_cnt-1)
+            else if(str_char_ptr == str_length_cnt)
             begin
                 l2_nxtState = NORMAL_MODE;
             end
@@ -419,10 +419,10 @@ begin: PTRS
                             str_frame_ptr    <= #2 str_frame_ptr + 1;
                         end
                         else if(star_searched_state)
-                        begin
+                        begin //Prevent * ,from seraching other char again
                             pattern_char_ptr <= #2 pattern_star_temp_ptr;
-                            str_char_ptr     <= #2 str_frame_ptr + 1;
-                            str_frame_ptr    <= #2 str_frame_ptr + 1;
+                            str_char_ptr     <= #2 str_char_ptr + 1;
+                            str_frame_ptr    <= #2 str_frame_ptr;
                         end
                         else
                         begin
@@ -507,7 +507,7 @@ begin: PTRS
             end
             WAIT_FOR_CHAR:
             begin
-                if(str_char_ptr == str_length_cnt - 1)
+                if(str_char_ptr == str_length_cnt)
                 begin
                     pattern_char_ptr <= #2 0;
                     str_char_ptr     <= #2 str_frame_ptr +1;
@@ -525,6 +525,7 @@ begin: PTRS
                     str_char_ptr    <= #2 charFound_f ? str_char_ptr : str_char_ptr + 1;
                     str_frame_ptr   <= #2 str_frame_ptr;
                 end
+
             end
             default:
             begin
