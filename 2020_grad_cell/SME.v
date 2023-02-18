@@ -16,7 +16,7 @@ integer i;
 //  PARAMETERS
 //==================
 parameter BYTE = 8 ;
-parameter STR_LENGTH = 32 ;
+parameter STR_LENGTH = 34 ;
 parameter PATTERN_LENGTH = 8 ;
 
 parameter PTR_WIDTH = BYTE;
@@ -113,8 +113,7 @@ wire str_current_is_empty        = current_str_char == 0;
 
 wire patternMatched_f = (localpatternSearched_f && charMatches_f) || (state_LAST_OR_SPACE && str_current_is_empty);
 
-wire star_locally_permuted = !charMatches_f && star_mode_state ;
-wire star_all_permuted;
+wire star_all_permuted = str_frame_ptr == str_length_cnt-1;
 
 //================================
 //  Det Match flag
@@ -197,7 +196,11 @@ end
 //================================
 always @(*)
 begin
-    if(matches_cur_state && pattern_char_ptr == (PATTERN_LENGTH-1))
+    if(star_mode_state)
+    begin
+        strMatchingDone_f = star_all_permuted ? 1'b1 : 1'b0;
+    end
+    else if(matches_cur_state && pattern_char_ptr == (PATTERN_LENGTH-1))
     begin
         strMatchingDone_f = 1'b1;
     end
@@ -270,31 +273,24 @@ begin:L2_FSM_NXT
     case(l2_curState)
         NORMAL_MODE:
         begin
-            if(star_locally_permuted)
-            begin
-                l2_nxtState = WAIT_FOR_CHAR;
-            end
-            else
-            begin
-                case({isHat_f,isDollar_f,isStar_f})
-                    3'b100:
-                    begin
-                        l2_nxtState = FIRST_OR_SPACE;
-                    end
-                    3'b010:
-                    begin
-                        l2_nxtState = LAST_OR_SPACE;
-                    end
-                    3'b001:
-                    begin
-                        l2_nxtState = WAIT_FOR_CHAR;
-                    end
-                    default:
-                    begin
-                        l2_nxtState = NORMAL_MODE;
-                    end
-                endcase
-            end
+            case({isHat_f,isDollar_f,isStar_f})
+                3'b100:
+                begin
+                    l2_nxtState = FIRST_OR_SPACE;
+                end
+                3'b010:
+                begin
+                    l2_nxtState = LAST_OR_SPACE;
+                end
+                3'b001:
+                begin
+                    l2_nxtState = WAIT_FOR_CHAR;
+                end
+                default:
+                begin
+                    l2_nxtState = NORMAL_MODE;
+                end
+            endcase
         end
         FIRST_OR_SPACE:
         begin
@@ -306,7 +302,18 @@ begin:L2_FSM_NXT
         end
         WAIT_FOR_CHAR:
         begin
-            l2_nxtState = charFound_f ? NORMAL_MODE : WAIT_FOR_CHAR;
+            if(charFound_f)
+            begin
+                l2_nxtState = NORMAL_MODE;
+            end
+            else if(str_char_ptr == str_length_cnt-1)
+            begin
+                l2_nxtState = NORMAL_MODE;
+            end
+            else
+            begin
+                l2_nxtState = WAIT_FOR_CHAR;
+            end
         end
         default:
         begin
@@ -348,29 +355,65 @@ begin: PTRS
                     str_char_ptr     <= #2 str_char_ptr ;
                     str_frame_ptr    <= #2 str_frame_ptr;
                 end
+                else if(localpatternSearched_f)
+                begin
+                    if(star_mode_state)
+                    begin
+                        pattern_char_ptr <= #2 pattern_star_temp_ptr;
+                        str_char_ptr     <= #2 str_frame_ptr + 1;
+                        str_frame_ptr    <= #2 str_frame_ptr + 1;
+                    end
+                    else
+                    begin
+                        pattern_char_ptr <= #2 0;
+                        str_char_ptr     <= #2 str_frame_ptr + 1;
+                        str_frame_ptr    <= #2 str_frame_ptr + 1;
+                    end
+                end
                 else if(isStar_f)
                 begin
                     pattern_char_ptr <= #2 pattern_char_ptr+1;
                     str_char_ptr     <= #2 str_char_ptr ;
                     str_frame_ptr    <= #2 str_frame_ptr;
                 end
-                else if(localpatternSearched_f)
-                begin
-                    pattern_char_ptr <= #2 0;
-                    str_char_ptr     <= #2 str_frame_ptr + 1;
-                    str_frame_ptr    <= #2 star_mode_state ? str_frame_ptr : str_frame_ptr + 1;
-                end
                 else if(!charMatches_f)
                 begin
-                    pattern_char_ptr <= #2 0;
-                    str_char_ptr     <= #2 str_frame_ptr + 1;
-                    str_frame_ptr    <= #2 star_mode_state ? str_frame_ptr : str_frame_ptr + 1;
+                    if(star_mode_state)
+                    begin
+                        if(lastStrChar_f)
+                        begin
+                            pattern_char_ptr <= #2 pattern_star_temp_ptr;
+                            str_char_ptr     <= #2 str_frame_ptr + 1;
+                            str_frame_ptr    <= #2 str_frame_ptr + 1;
+                        end
+                        else
+                        begin
+                            pattern_char_ptr <= #2 pattern_char_ptr;
+                            str_char_ptr     <= #2 str_char_ptr + 1;
+                            str_frame_ptr    <= #2 str_frame_ptr;
+                        end
+                    end
+                    else
+                    begin
+                        pattern_char_ptr <= #2 0;
+                        str_char_ptr     <= #2 str_frame_ptr + 1;
+                        str_frame_ptr    <= #2 str_frame_ptr + 1;
+                    end
                 end
                 else
                 begin
-                    pattern_char_ptr<= #2 charMatches_f ? pattern_char_ptr + 1 : 0;
-                    str_char_ptr    <= #2 charMatches_f ? str_char_ptr + 1 : str_frame_ptr;
-                    str_frame_ptr   <= #2 str_frame_ptr;
+                    if(star_mode_state)
+                    begin
+                        pattern_char_ptr<= #2 charMatches_f ? pattern_char_ptr + 1 : 0;
+                        str_char_ptr    <= #2 charMatches_f ? str_char_ptr + 1 : str_char_ptr;
+                        str_frame_ptr   <= #2 str_frame_ptr;
+                    end
+                    else
+                    begin
+                        pattern_char_ptr<= #2 charMatches_f ? pattern_char_ptr + 1 : 0;
+                        str_char_ptr    <= #2 charMatches_f ? str_char_ptr + 1 : str_frame_ptr;
+                        str_frame_ptr   <= #2 str_frame_ptr;
+                    end
                 end
             end
             FIRST_OR_SPACE:
@@ -411,7 +454,13 @@ begin: PTRS
             end
             WAIT_FOR_CHAR:
             begin
-                if(charFound_f)
+                if(str_char_ptr == str_length_cnt - 1)
+                begin
+                    pattern_char_ptr <= #2 0;
+                    str_char_ptr     <= #2 str_frame_ptr +1;
+                    str_frame_ptr    <= #2 str_frame_ptr +1;
+                end
+                else if(charFound_f)
                 begin
                     pattern_char_ptr <= #2 pattern_char_ptr+1;
                     str_char_ptr     <= #2 str_char_ptr  +1;
@@ -446,6 +495,10 @@ begin
     begin
         pattern_star_temp_ptr <= 0;
     end
+    else if(state_DONE)
+    begin
+        pattern_star_temp_ptr <= 0;
+    end
     else if(charFound_f)
     begin
         pattern_star_temp_ptr <= pattern_char_ptr;
@@ -459,6 +512,10 @@ end
 always @(posedge clk or posedge reset)
 begin
     if(reset)
+    begin
+        star_mode_state <= 0;
+    end
+    else if(state_DONE)
     begin
         star_mode_state <= 0;
     end
