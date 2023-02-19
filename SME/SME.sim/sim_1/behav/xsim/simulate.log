@@ -59,50 +59,50 @@ Time resolution is 1 ps
   __________________________________________________________
   == String 3  "She sees cheese"
   -- Pattern 1  "ees."
-       cycle 3a5, expect(1,05) , get(1,05) >> Pass
+       cycle 3a2, expect(1,05) , get(1,05) >> Pass
   -- Pattern 2  "ees.$"
-       cycle 3c3, expect(1,0b) , get(1,0b) >> Pass
+       cycle 3c0, expect(1,0b) , get(1,0b) >> Pass
   -- Pattern 3  "e..se"
-       cycle 3f9, expect(0,--) , get(0,--) >> Pass
+       cycle 3f6, expect(0,--) , get(0,--) >> Pass
   -- Pattern 4  "e..ee$"
-       cycle 433, expect(0,--) , get(0,--) >> Pass
+       cycle 430, expect(0,--) , get(0,--) >> Pass
   -- Pattern 5  "^ees*"
-       cycle 472, expect(0,--) , get(0,--) >> Pass
+       cycle 46f, expect(0,--) , get(0,--) >> Pass
   -- Pattern 6  "hee*se"
-       cycle 48b, expect(1,0a) , get(1,0a) >> Pass
+       cycle 488, expect(1,0a) , get(1,0a) >> Pass
   -- Pattern 7  "he.s"
-       cycle 495, expect(1,01) , get(1,00) >> Wrong index
+       cycle 492, expect(1,01) , get(1,01) >> Pass
   -- Pattern 8  "*see$"
-       cycle 539, expect(0,--) , get(0,--) >> Pass
+       cycle 536, expect(0,--) , get(0,--) >> Pass
   -- Pattern 9  "se*ce"
-       cycle 59e, expect(0,--) , get(0,--) >> Pass
+       cycle 5b1, expect(0,--) , get(0,--) >> Pass
   __________________________________________________________
   == String 4  "But she said the butter's bitter"
   -- Pattern 1  "sa*said"
-       cycle 714, expect(0,--) , get(0,--) >> Pass
+       cycle 727, expect(0,--) , get(0,--) >> Pass
   -- Pattern 2  "b*tter"
-       cycle 733, expect(1,11) , get(1,11) >> Pass
+       cycle 746, expect(1,11) , get(1,11) >> Pass
   -- Pattern 3  "b*tter$"
-       cycle 760, expect(1,11) , get(1,00) >> Wrong index
+       cycle 773, expect(1,11) , get(1,11) >> Pass
   -- Pattern 4  "ut*r"
-       cycle 77d, expect(1,01) , get(1,01) >> Pass
+       cycle 790, expect(1,01) , get(1,01) >> Pass
   -- Pattern 5  "ut*tted"
-       cycle 8fa, expect(0,--) , get(0,--) >> Pass
+       cycle 9b0, expect(0,--) , get(0,--) >> Pass
   -- Pattern 6  "^ut*tter"
-       cycle 935, expect(0,--) , get(0,--) >> Pass
+       cycle 9eb, expect(0,--) , get(0,--) >> Pass
   -- Pattern 7  "*tered"
-       cycle bc8, expect(0,--) , get(0,--) >> Pass
+       cycle c7e, expect(0,--) , get(0,--) >> Pass
   __________________________________________________________
   == String 5  "He threw three free throws"
   -- Pattern 1  "thr*the$"
-       cycle d86, expect(0,--) , get(0,--) >> Pass
+       cycle e3c, expect(0,--) , get(0,--) >> Pass
   -- Pattern 2  "^thro*th"
-       cycle dcc, expect(0,--) , get(0,--) >> Pass
+       cycle e82, expect(0,--) , get(0,--) >> Pass
   -- Pattern 3  ".ree th"
-       cycle dff, expect(1,0f) , get(1,0f) >> Pass
+       cycle eb5, expect(1,0f) , get(1,0f) >> Pass
   -- Pattern 4  ".ree  fr"
-       cycle e47, expect(0,--) , get(0,--) >> Pass
+       cycle efd, expect(0,--) , get(0,--) >> Pass
   -- Pattern 5  ".ree *re"
-       cycle e6f, expect(1,0a) , get(1,0a) >> Pass
+       cycle f25, expect(1,0a) , get(1,0a) >> Pass
   -- Pattern 6  "re. thr"
-   
+       cycle f39,

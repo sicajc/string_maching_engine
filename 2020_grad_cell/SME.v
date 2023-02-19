@@ -17,7 +17,7 @@ integer i;
 //==================
 parameter BYTE = 8 ;
 parameter STR_LENGTH = 34 ;
-parameter PATTERN_LENGTH = 8 ;
+parameter PATTERN_LENGTH = 10 ;
 
 parameter PTR_WIDTH = BYTE;
 parameter CNT_WIDTH = BYTE;
@@ -200,7 +200,7 @@ begin
     begin
         star_searched_state <= 0;
     end
-    else if(charFound_f)
+    else if(charFound_f && star_mode_state)
     begin
         star_searched_state <= 1;
     end
@@ -225,11 +225,11 @@ begin
     begin
         strMatchingDone_f = star_all_permuted ? 1'b1 : 1'b0;
     end
-    else if(matches_cur_state && pattern_char_ptr == (PATTERN_LENGTH-1))
+    else if(matches_cur_state && pattern_char_ptr == (PATTERN_LENGTH))
     begin
         strMatchingDone_f = 1'b1;
     end
-    else if(str_char_ptr == ((STR_LENGTH)-pattern_length_cnt))
+    else if(str_char_ptr == ((STR_LENGTH)-(pattern_length_cnt)))
     begin
         strMatchingDone_f = 1'b1;
     end
@@ -346,6 +346,7 @@ begin:L2_FSM_NXT
         end
     endcase
 end
+
 //================================
 //  POINTERS
 //================================
@@ -395,7 +396,12 @@ begin: PTRS
                         str_char_ptr     <= #2 str_frame_ptr + 1;
                         str_frame_ptr    <= #2 str_frame_ptr + 1;
                     end
-                    else
+                    else if(charMatches_f)
+                    begin
+                        pattern_char_ptr <= #2 0;
+                        str_char_ptr     <= #2 str_frame_ptr;
+                        str_frame_ptr    <= #2 str_frame_ptr;
+                    end
                     begin
                         pattern_char_ptr <= #2 0;
                         str_char_ptr     <= #2 str_frame_ptr + 1;
