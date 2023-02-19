@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2021.1 (64-bit)
+# SW Build 3247384 on Thu Jun 10 19:36:33 MDT 2021
+# IP Build 3246043 on Fri Jun 11 00:30:35 MDT 2021
+# Start of session at: Sun Feb 19 10:26:41 2023
+# Process ID: 1668
+# Current directory: C:/Users/HIBIKI/Desktop/String_machine_engine_IC_Contest_2020/SME/SME.runs/synth_1
+# Command line: vivado.exe -log SME.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source SME.tcl
+# Log file: C:/Users/HIBIKI/Desktop/String_machine_engine_IC_Contest_2020/SME/SME.runs/synth_1/SME.vds
+# Journal file: C:/Users/HIBIKI/Desktop/String_machine_engine_IC_Contest_2020/SME/SME.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source SME.tcl -notrace
